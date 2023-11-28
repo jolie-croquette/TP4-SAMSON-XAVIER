@@ -5,12 +5,37 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TP4"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" Background="#FFBDBDBD">
 
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="BtnChargerFichier" Content="Charger CSV" HorizontalAlignment="Left" VerticalAlignment="Top" Click="BtnChargerFichier_Click"/>
+    <StackPanel x:Name="stkPrincipal" Orientation="Horizontal">
+
+
+        <StackPanel x:Name="stkSideBar" Background="#FF272727" Height="434" Width="105" VerticalAlignment="Top" d:IsLocked="True">
+
+            <TextBlock x:Name="TxtBlockTitre" TextWrapping="Wrap" Margin="0,10,0,0" FontFamily="Bahnschrift Light SemiCondensed" FontSize="24" HorizontalAlignment="Center" Foreground="#FFFFAF00" TextAlignment="Center"><Run Language="fr-ca" Text="TP4"/></TextBlock>
+            <Rectangle x:Name="Ligne" Height="1" Stroke="White" Width="74" Margin="0,0,0,10"/>
+
+            <Border x:Name="BorderBtn" Background="#FF336F27" Height="29" HorizontalAlignment="Center" CornerRadius="5">
+                <Button x:Name="BtnChargerFichier" Content="Charger CSV" HorizontalAlignment="Center" Click="BtnChargerFichier_Click" Width="90" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Padding="4,4,4,4" FontSize="14" VerticalAlignment="Center" Foreground="White" BorderBrush="{x:Null}">
+                    <Button.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Button.RenderTransform>
+                </Button>
+            </Border>
+
+
+        </StackPanel>
+        <StackPanel x:Name="stkContenue" Width="695" Height="429">
+            <ProgressBar x:Name="pbrChargementContenue" Height="12" Width="179" IsIndeterminate="True" Margin="-16,215,0,0" Opacity="0"/>
+        </StackPanel>
+
 
     </StackPanel>
 
-    
+
 </Window>

@@ -1,0 +1,12 @@
+ID;NOM;NOMFAMILLE;AGE;SALAIRE;POSTE;ANCIENNETE;augmentationDeSalaire
+0;Émilie;Lefebvre;40;150000;Président-directeur général;8;oui
+1;Léa;Tremblay;26;60000;Développeur;2;oui
+2;Maxime;Gagnon;32;120000;Vice-président;5;oui
+3;Gabrielle;Roy;28;50000;Technicien informatique;3;oui
+4;Alexandre;Bélanger;22;45000;Technicien informatique;1;oui
+5;Charlotte;Lavoie;29;55000;Service au vente;4;oui
+6;Félix;Fortin;35;70000;Ressources humaines;6;oui
+7;Clara;Deschamps;25;60000;Comptable;3;oui
+8;Olivier;Dubois;30;55000;Technicien informatique;4;oui
+9;Sophie;Gauthier;27;48000;Secrétaire;2;oui
+10;Thomas;Pelletier;31;65000;Développeur;3;oui

@@ -1,5 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.Data;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace TP4
 {
@@ -24,7 +29,7 @@ namespace TP4
         /// <summary>
         /// Chemin d'accès vers le fichier CSV à lire.
         /// </summary>
-        string cheminAccesLecture = @"C:\data\420-04A-FX\TP4\TP4_EXEMPLE.csv";
+        string cheminAccesLecture = @"C:\data\420-04A-FX\TP4\TP4_SAMSON.csv";
 
         public MainWindow()
         {
@@ -43,10 +48,11 @@ namespace TP4
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnChargerFichier_Click(object sender, RoutedEventArgs e)
+        private async void BtnChargerFichier_Click(object sender, RoutedEventArgs e)
         {
+            pbrChargementContenue.Opacity = 100;
             // CODE FOURNI
-            string cheminAcces = @"C:\data\420-04A-FX\TP4\TP4_exemple.csv";
+            string cheminAcces = @"C:\data\420-04A-FX\TP4\TP4_SAMSON.csv";
             // La fonction LireCsvChargerMatrice doit être complétée par vous.
             matrice = LireCsvChargerMatrice(cheminAcces);
 
@@ -114,19 +120,28 @@ namespace TP4
             // la construction de la matrice de strings
             // TODO
 
+            int nbColonnes = lignesFichier[0].Split(';').Length;
+            int nbLignes = lignesFichier.Length;
+
             // Création de la matrice : à modifier avec la bonne dimension
             // TODO
-            string[,] uneMatrice = new string[0, 0];
+            string[,] employees = new string[nbLignes, nbColonnes];
 
             // Affectation de la matrice à partir des données de lignesFichier; 
             // TODO
 
+            for (int i = 0; i < lignesFichier.Length; i++)
+            {
+                string[] vecteurProprieter = lignesFichier[i].Split(';');
+                for (int j = 0; j < vecteurProprieter.Length; j++)
+                {
+                    employees[i, j] = vecteurProprieter[j];
+                }
+            }
             #endregion
 
             // Retourner une matrice
-            return uneMatrice;
-
-
+            return employees;
 
         }
 
