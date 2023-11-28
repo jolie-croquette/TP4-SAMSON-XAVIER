@@ -50,7 +50,6 @@ namespace TP4
         /// <param name="e"></param>
         private async void BtnChargerFichier_Click(object sender, RoutedEventArgs e)
         {
-            pbrChargementContenue.Opacity = 100;
             // CODE FOURNI
             string cheminAcces = @"C:\data\420-04A-FX\TP4\TP4_SAMSON.csv";
             // La fonction LireCsvChargerMatrice doit être complétée par vous.
@@ -58,9 +57,22 @@ namespace TP4
 
             // Charger la liste déroulante de votre formulaire. Cette liste doit contenir les noms de vos entités
             // TODO
+            cmbEmployer.Items.Clear();
+            for (int i = 0; i < matrice.GetLength(0); i++)
+            {
+                for (int j = 0; j < 1; j++)
+                {
+                    Debug.Print(matrice[i, j]);
+                    cmbEmployer.Items.Add($"{i+1}. {matrice[i, 1]}");
+                    imgEmployer.Source = matrice[i, 8];
+                }
+            }
 
             // Par défaut, la première entitée doit être sélectionnée dans la liste et son contenu doit être affiché dans le formulaire
             // TODO
+            cmbEmployer.SelectedIndex = 0;
+
+            MessageBox.Show("Donnée chargée", "TP4", MessageBoxButton.OK, MessageBoxImage.Information);
 
         }
 
