@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace TP4
 {
@@ -50,30 +52,39 @@ namespace TP4
         /// <param name="e"></param>
         private async void BtnChargerFichier_Click(object sender, RoutedEventArgs e)
         {
+            bool boutonCliquer = false;
             // CODE FOURNI
-            string cheminAcces = @"C:\data\420-04A-FX\TP4\TP4_SAMSON.csv";
             // La fonction LireCsvChargerMatrice doit être complétée par vous.
-            matrice = LireCsvChargerMatrice(cheminAcces);
 
             // Charger la liste déroulante de votre formulaire. Cette liste doit contenir les noms de vos entités
             // TODO
-            cmbEmployer.Items.Clear();
-            for (int i = 0; i < matrice.GetLength(0); i++)
+            if (!boutonCliquer)
             {
-                for (int j = 0; j < 1; j++)
+                string cheminAcces = @"C:\data\420-04A-FX\TP4\TP4_SAMSON.csv";
+                matrice = LireCsvChargerMatrice(cheminAcces);
+                cmbEmployer.Items.Clear();
+                for (int i = 0; i < matrice.GetLength(0); i++)
                 {
-                    Debug.Print(matrice[i, j]);
-                    cmbEmployer.Items.Add($"{i+1}. {matrice[i, 1]}");
-                    imgEmployer.Source = matrice[i, 8];
+                    for (int j = 0; j < 1; j++)
+                    {
+                        cmbEmployer.Items.Add($"{i + 1}. {matrice[i, 1]}");
+                    }
                 }
+
+                // Par défaut, la première entitée doit être sélectionnée dans la liste et son contenu doit être affiché dans le formulaire
+                // TODO
+                cmbEmployer.SelectedIndex = 0;
+
+                MessageBox.Show("Donnée chargée", "EquiGuest", MessageBoxButton.OK, MessageBoxImage.Information);
+                boutonCliquer = true;
+                BtnChargerFichier.IsEnabled = false;
+
             }
+            else
+            {
+                MessageBox.Show("Donnée déjà chargé...", "EquiGuest", MessageBoxButton.OK, MessageBoxImage.Error);
 
-            // Par défaut, la première entitée doit être sélectionnée dans la liste et son contenu doit être affiché dans le formulaire
-            // TODO
-            cmbEmployer.SelectedIndex = 0;
-
-            MessageBox.Show("Donnée chargée", "TP4", MessageBoxButton.OK, MessageBoxImage.Information);
-
+            }
         }
 
         #region VOS FONCTIONS 
@@ -116,8 +127,8 @@ namespace TP4
             // Remplir le vecteur de lignes avec les lignes du fichier, incluant l'entête.
             for (int i = 0; i < lignesFichier.Length; i++)
             {
-                                   // [i+1] On commence à la ligne 1, car la ligne 0 est l'entête
-                lignesFichier[i] = lignesFichierTemporaire[i+1];
+                // [i+1] On commence à la ligne 1, car la ligne 0 est l'entête
+                lignesFichier[i] = lignesFichierTemporaire[i + 1];
             }
             #endregion
 
@@ -158,5 +169,25 @@ namespace TP4
         }
 
         #endregion
+
+        private void cmbEmployer_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            for (int i = 0; i < matrice.GetLength(0); i++)
+            {
+                for (int j = 0; j < 1; j++)
+                {
+                    if (cmbEmployer.SelectedValue.ToString() == $"{i + 1}. {matrice[i, 1]}".ToString())
+                    {
+                        string employerNom = cmbEmployer.SelectedValue.ToString();
+                        TxtBoxNomFamille.Text = cmbEmployer.SelectedValue.ToString().Substring(3);
+                        TxtBoxNom.Text = matrice[i,2].ToString();
+                        // Test with a hard-coded image path
+                        string imagePath = @"C:\Users\xavie\OneDrive - Cégep Garneau\Introduction à la programmation\TP\TP4\TP4-SAMSON-XAVIER\img\" + matrice[i, 8];
+                        imgEmployer.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+                    }
+                }
+            }
+        }
     }
 }
