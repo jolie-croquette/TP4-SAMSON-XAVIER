@@ -5,12 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TP4"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1200" Background="#FFBDBDBD">
+        Title="EquiGuest" Height="720" Width="1200" Background="#FFBDBDBD" Icon="/favicon.png">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="New" CanExecute="NewCommand_CanExecute" Executed="NewCommand_Executed" />
+    </Window.CommandBindings>
 
     <StackPanel x:Name="stkPrincipal" Orientation="Horizontal">
 
 
-        <StackPanel x:Name="stkSideBar" Background="#FF272727" Width="165" VerticalAlignment="Top" Height="704">
+        <StackPanel x:Name="stkSideBar" Background="#FF272727" Width="165" VerticalAlignment="Top" Height="704" d:IsLocked="True">
 
             <TextBlock x:Name="TxtBlockTitre" TextWrapping="Wrap" Margin="0,10,0,0" FontFamily="Bahnschrift Light SemiCondensed" FontSize="36" HorizontalAlignment="Center" Foreground="#FFFFAF00" TextAlignment="Center" Text="EquiGuest"/>
             <Rectangle x:Name="Ligne" Height="1" Stroke="White" Width="74" Margin="0,0,0,10"/>
@@ -31,20 +35,39 @@
 
         </StackPanel>
         <StackPanel x:Name="stkContenue" Width="1025" Margin="10,0,0,0">
+            <DockPanel>
+                <Menu DockPanel.Dock="Top" Background="White" Margin="-10,0,0,0">
+                    <MenuItem Header="_Outils">
+                        <MenuItem x:Name="MenuItemLoad" Header="_Charger" Click="BtnChargerFichier_Click" Command="New"/>
+                        <Separator />
+                        <MenuItem x:Name="MenuItemExit" Header="_Quitter" Click="Exit_Click"/>
+                    </MenuItem>
+                </Menu>
+            </DockPanel>
             <Label x:Name="lblSelectEmployer" Content="Employer" Margin="0,5,0,0" HorizontalAlignment="Left" Width="150" FontStyle="Italic" FontSize="14" d:IsLocked="True"/>
-            <StackPanel Height="100" HorizontalAlignment="Left" Orientation="Horizontal">
+            <StackPanel x:Name="stkSelectionEmployer" HorizontalAlignment="Left" Orientation="Horizontal">
                 <ComboBox x:Name="cmbEmployer" FontSize="16" SelectionChanged="cmbEmployer_SelectionChanged" Height="27.28" Width="150"/>
-                <Button Content="Modifier" Width="150" Height="27.28" Margin="10,0,0,0"/>
+                <Button x:Name="BtnModifier" Content="Modifier" Width="150" Height="27.28" Margin="10,0,0,0" Click="BtnModifier_Click"/>
+                <TextBlock x:Name="TxtBlockModification" TextWrapping="Wrap" Text="MODIFICATION EN COURS" Foreground="Red" FontSize="36" Margin="75,0,0,0" HorizontalAlignment="Center" FontStyle="Italic" TextDecorations="Underline" FontWeight="Bold" Visibility="Hidden"/>
             </StackPanel>
-            <GroupBox x:Name="GrbInfoEmployer" Header="Information" Margin="0,20,0,0" Width="940" BorderBrush="Black">
+            <GroupBox x:Name="GrbInfoEmployer" Header="Information" Margin="0,10,0,0" Width="940" BorderBrush="Black">
                 <StackPanel x:Name="StkInfoEmployer" Orientation="Horizontal">
-                    <Image x:Name="imgEmployer" Height="171" Source="/user.png"/>
-                    <StackPanel Width="118" Margin="10,0,0,0">
+                    <Image x:Name="imgEmployer" Height="171" Source="/user.png" MouseLeftButtonUp="ImgEmployer_Click" MouseEnter="ImgEmployer_MouseEnter" MouseLeave="ImgEmployer_MouseLeave" Stretch="UniformToFill"/>
+                    <StackPanel x:Name="StkNom" Margin="10,0,0,0">
                         <TextBox x:Name="TxtBoxNomFamille" TextWrapping="Wrap" Text="Albert" Background="{x:Null}" FontSize="24" BorderBrush="{x:Null}" HorizontalAlignment="Left" VerticalAlignment="Top" AutomationProperties.IsOffscreenBehavior="FromClip" IsEnabled="False"/>
-                        <TextBox x:Name="TxtBoxNom" TextWrapping="Wrap" Text="Battie" FontSize="20" Background="{x:Null}" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="{x:Null}" IsEnabled="False"/>
+                        <TextBox x:Name="TxtBoxNom" TextWrapping="Wrap" Text="Batihe" FontSize="20" Background="{x:Null}" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="{x:Null}" IsEnabled="False"/>
+                        <TextBlock x:Name="TxtBlockID" TextWrapping="Wrap" Text="Numéro d'employé : xx" Margin="0,5,0,0"/>
+                        <StackPanel x:Name="StkAge" Margin="0,10,0,0" Orientation="Horizontal">
+                            <TextBox x:Name="TxtBoxDateNaissance" TextWrapping="Wrap" Text="mm/jj/aaaa" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" IsEnabled="False"/>
+                            <TextBlock x:Name="TxtBlockAge" TextWrapping="Wrap" Text="(xx ans)" IsEnabled="False" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
+            <StackPanel x:Name="StkSaveCancel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0">
+                <Button x:Name="btnSauvegarder" Content="Sauvegarder" Margin="0,0,5,0" Width="75" Click="btnSauvegarder_Click"/>
+                <Button x:Name="btnAnnuler" Content="Annuler" Margin="5,0,0,0" Width="50" IsCancel="True" Click="btnAnnuler_Click"/>
+            </StackPanel>
         </StackPanel>
 
 

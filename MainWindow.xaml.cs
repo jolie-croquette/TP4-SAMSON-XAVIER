@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -21,6 +22,9 @@ namespace TP4
         // #############################
         // #### VARIABLES GLOBALES #####
         // Ces variables sont accessible partout dans le code arrière.
+        bool boutonCliquer = false;
+        bool modifEnCours = false;
+        string cheminNouvelleImage = null;
 
         /// <summary>
         ///  La matrice à utiliser pour récupérer les données extraites votre fichier .CSV
@@ -52,7 +56,6 @@ namespace TP4
         /// <param name="e"></param>
         private async void BtnChargerFichier_Click(object sender, RoutedEventArgs e)
         {
-            bool boutonCliquer = false;
             // CODE FOURNI
             // La fonction LireCsvChargerMatrice doit être complétée par vous.
 
@@ -67,6 +70,9 @@ namespace TP4
                 {
                     for (int j = 0; j < 1; j++)
                     {
+                        string nomFamille = matrice[i, 2];
+                        //string nomCouper = nomFamille.Substring(nomFamille.Length - 1);
+
                         cmbEmployer.Items.Add($"{i + 1}. {matrice[i, 1]}");
                     }
                 }
@@ -77,8 +83,6 @@ namespace TP4
 
                 MessageBox.Show("Donnée chargée", "EquiGuest", MessageBoxButton.OK, MessageBoxImage.Information);
                 boutonCliquer = true;
-                BtnChargerFichier.IsEnabled = false;
-
             }
             else
             {
@@ -170,9 +174,14 @@ namespace TP4
 
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cmbEmployer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            CacherControleModification(sender, e);
             for (int i = 0; i < matrice.GetLength(0); i++)
             {
                 for (int j = 0; j < 1; j++)
@@ -181,10 +190,178 @@ namespace TP4
                     {
                         string employerNom = cmbEmployer.SelectedValue.ToString();
                         TxtBoxNomFamille.Text = cmbEmployer.SelectedValue.ToString().Substring(3);
-                        TxtBoxNom.Text = matrice[i,2].ToString();
+                        TxtBoxNom.Text = matrice[i, 2].ToString();
+                        TxtBlockID.Text = "Numéro d'employer : " + matrice[i, 0];
+                        TxtBoxDateNaissance.Text = "Date de naissance : " + matrice[i, 9];
+                        TxtBlockAge.Text = "(" + matrice[i, 3] + " ans)";
                         // Test with a hard-coded image path
-                        string imagePath = @"C:\Users\xavie\OneDrive - Cégep Garneau\Introduction à la programmation\TP\TP4\TP4-SAMSON-XAVIER\img\" + matrice[i, 8];
+                        string imagePath = @"C:\data\420-04A-FX\TP4\img\" + matrice[i, 8];
                         imgEmployer.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnModifier_Click(object sender, RoutedEventArgs e)
+        {
+            if (boutonCliquer)
+            {
+                AfficherControleModification(sender, e);
+            }
+            else
+            {
+                MessageBox.Show("Aucun employé sélectionné", "EquiGuest", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnAnnuler_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Êtes vous sure de vouloir annuler vos modification ?", "EquiGuest", MessageBoxButton.YesNo);
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    AnnulerModification(sender, e);
+                    CacherControleModification(sender, e);
+                    break;
+                case MessageBoxResult.No:
+                    break;
+            }
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AfficherControleModification(object sender, RoutedEventArgs e)
+        {
+            StkSaveCancel.Visibility = Visibility.Visible;
+            TxtBoxNom.IsEnabled = true;
+            TxtBoxNomFamille.IsEnabled = true;
+            TxtBoxDateNaissance.IsEnabled = true;
+            TxtBlockModification.Visibility = Visibility.Visible;
+            modifEnCours = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CacherControleModification(object sender, RoutedEventArgs e)
+        {
+            StkSaveCancel.Visibility = Visibility.Hidden;
+            TxtBoxNom.IsEnabled = false;
+            TxtBoxNomFamille.IsEnabled = false;
+            TxtBoxDateNaissance.IsEnabled = false;
+            TxtBlockModification.Visibility = Visibility.Hidden;
+            modifEnCours = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImgEmployer_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (modifEnCours)
+            {
+                OpenFileDialog ImageEmployer = new OpenFileDialog();
+                ImageEmployer.Filter = "Image files (*.jpg;*.png)|*.jpg; *.png|All Files (*.*)|*.*";
+                ImageEmployer.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                ImageEmployer.ShowDialog();
+
+
+                if (ImageEmployer.ShowDialog() == true)
+                {
+                    cheminNouvelleImage = ImageEmployer.FileName;
+                    imgEmployer.Source = new BitmapImage(new Uri(cheminNouvelleImage, UriKind.Absolute));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            BtnChargerFichier_Click(sender, e);
+        }
+
+        private void AnnulerModification(object sender, RoutedEventArgs e)
+        {
+            int ID = cmbEmployer.SelectedIndex;
+
+            string employerNom = cmbEmployer.SelectedValue.ToString();
+            TxtBoxNomFamille.Text = cmbEmployer.SelectedValue.ToString().Substring(3);
+            TxtBoxNom.Text = matrice[ID, 2].ToString();
+            TxtBoxDateNaissance.Text = matrice[ID, 9];
+            TxtBlockAge.Text = "(" + matrice[ID, 3] + " ans)";
+            TxtBlockID.Text = "Numéro d'employer : " + matrice[ID, 0];
+            // Test with a hard-coded image path
+            string imagePath = @"C:\data\420-04A-FX\TP4\img\" + matrice[ID, 8];
+            imgEmployer.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+        }
+
+        private void ImgEmployer_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (modifEnCours)
+            {
+                Cursor = Cursors.Hand;
+            }
+        }
+
+        private void ImgEmployer_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Cursor = Cursors.Arrow;
+        }
+
+        private void btnSauvegarder_Click(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < matrice.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrice.GetLength(1); j++)
+                {
+                    if (cmbEmployer.SelectedIndex == Convert.ToInt32(matrice[i, 0]))
+                    {
+                        string destinationFile = @"C:\data\420-04A-FX\TP4\img";
+                        File.Copy(cheminNouvelleImage, Path.Combine(destinationFile, $"employer{matrice[i, 0] + 1}.jpg"), true);
+                        matrice[i, 8] = Path.GetFileName(cheminNouvelleImage);
                     }
                 }
             }
