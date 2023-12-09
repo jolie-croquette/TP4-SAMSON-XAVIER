@@ -1,12 +1,12 @@
 ID;NOM;NOMFAMILLE;AGE;SALAIRE;POSTE;ANCIENNETE;augmentationDeSalaire;IMG;Date de naissance;Cellulaire;ContactUrgence;LienAvecEmployerContactUrgence
 0;Rosalie;Lefebvre;40;150000;President-directeur general;8;oui;employer01.jpg;1983-01-15;5811234567;4189876543;Conjoint(e)
-1;Lea;Tremblay;26;60000;Developpeur;2;oui;employer02.jpg;1997-08-22;4188765432;5812345678;Frere
+1;Lea;Tremblay;26;60000;Developpeur;2;non;employer02.jpg;1997-08-22;4188765432;5812345678;Frere
 2;Maxime;Gagnon;32;120000;Vice-president;5;oui;employer03.jpg;1991-05-10;5813456789;4187654321;Grand-Papa
-3;Gabriel;Roy;28;50000;Technicien informatique;3;oui;employer04.jpg;1995-11-30;5814567890;4182345678;Papa
+3;Gabriel;Roy;28;50000;Technicien informatique;3;non;employer04.jpg;1995-11-30;5814567890;4182345678;Papa
 4;Alexandre;Belange;22;45000;Technicien informatique;1;oui;employer05.jpg;2001-03-18;4187654321;5815678901;Soeur
-5;Charlotte;Lavoie;29;55000;Service au vente;4;oui;employer06.jpg;1994-09-07;5812345678;4188765432;Conjoint(e)
+5;Charlotte;Lavoie;29;55000;Service au vente;4;non;employer06.jpg;1994-09-07;5812345678;4188765432;Conjoint(e)
 6;Felix;Fortin;35;70000;Ressources humaines;6;oui;employer07.jpg;1988-06-25;4189876543;5813456789;Grand-Maman
-7;Clara;Deschamps;25;60000;Comptable;3;oui;employer08.jpg;1998-02-14;5815678901;4182345678;Maman
+7;Clara;Deschamps;25;60000;Comptable;3;non;employer08.jpg;1998-02-14;5815678901;4182345678;Maman
 8;Olivier;Dubois;30;55000;Technicien informatique;4;oui;employer09.jpg;1993-12-05;4188765432;5814567890;Grand-Papa
-9;Sophie;Gauthier;27;48000;Secretaire;2;oui;employer10.jpg;1996-10-20;5811234567;4187654321;Conjoint(e)
+9;Sophie;Gauthier;27;48000;Secretaire;2;non;employer10.jpg;1996-10-20;5811234567;4187654321;Conjoint(e)
 10;Thomas;Pelletier;31;65000;Developpeur;3;oui;employer11.jpg;1992-03-08;4187654321;5812345678;Maman

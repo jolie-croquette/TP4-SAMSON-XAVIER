@@ -207,12 +207,16 @@ namespace TP4
 
                             TxtBlockID.Text = "Numéro d'employer : " + matrice[i, 0];
 
+                            DatePckNaissance.Text = matrice[i, 9];
+
                             TxtBlockAge.Text = "(" + matrice[i, 3] + " ans)";
-                            TxtBlockAge.Text = CalculAge(DatePckNaissance.Text, i);
+                            TxtBlockAge.Text = $"({CalculAge(DatePckNaissance.Text, i)} ans)";
 
                             TxtBoxSalaire.Text = FormatageText(matrice[i, 4], "argent");
 
-                            DatePckNaissance.Text = matrice[i, 9];
+                            TxtBoxPoste.Text = matrice[i, 5];
+
+                            TxtBoxAnciennete.Text = matrice[i, 6];
 
                             string imagePath = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.IndexOf("bin"));
                             imgEmployer.Source = new BitmapImage(new Uri(imagePath + "\\img\\" + matrice[i, 8], UriKind.Absolute));
@@ -222,8 +226,16 @@ namespace TP4
 
                             TxtBoxContactUrgence.Text = FormatageText(matrice[i, 11], "téléphone");
 
-                            CmbContactUrgence.Items.Add(matrice[i, 12]);
-                            CmbContactUrgence.SelectedIndex = i;
+                            TxtBoxLienContactUrgence.Text = matrice[i, 12];
+
+                            if (matrice[i, 7].ToLower() == "oui")
+                            {
+                                OptAugmentationOui.IsChecked = true;
+                            }
+                            else if (matrice[i, 7].ToLower() == "non")
+                            {
+                                OptAugmentationNon.IsChecked = true;
+                            }
 
                         }
                     }
@@ -238,9 +250,21 @@ namespace TP4
         /// <param name="e"></param>
         private void BtnModifier_Click(object sender, RoutedEventArgs e)
         {
-            if (boutonCliquer)
+            if (boutonCliquer && !modifEnCours)
             {
                 AfficherControleModification(sender, e);
+            }
+            else if (modifEnCours)
+            {
+                MessageBoxResult result = MessageBox.Show("Quittez le mode de modification\n\nVous perdrez tous les changements apportés\n\nConfirmer...", "EquiGuest", MessageBoxButton.YesNo, MessageBoxImage.Exclamation, MessageBoxResult.No);
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        CacherControleModification(sender, e);
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                }
             }
             else
             {
@@ -276,20 +300,30 @@ namespace TP4
         private void AfficherControleModification(object sender, RoutedEventArgs e)
         {
             modifEnCours = true;
+            StkSauvegarderQuitter.Visibility = Visibility.Hidden;
 
             TxtBoxSalaire.Text = matrice[employerSelectionner, 4];
             TxtBoxCellulaire.Text = FormatageText(TxtBoxCellulaire.Text, "modifTel");
             TxtBoxContactUrgence.Text = FormatageText(TxtBoxContactUrgence.Text, "modifTel");
 
-            CmbContactUrgence.IsEnabled = true;
             DatePckNaissance.IsEnabled = true;
             TxtBoxSalaire.IsEnabled = true;
             TxtBoxCellulaire.IsEnabled = true;
+            TxtBoxLienContactUrgence.IsEnabled = true;
+            TxtBoxContactUrgence.IsEnabled = true;
+            TxtBoxPoste.IsEnabled = true;
+            OptAugmentationOui.IsEnabled = true;
+            OptAugmentationNon.IsEnabled = true;
+            TxtBoxAnciennete.IsEnabled = true;
 
             DatePckNaissance.Background = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
             TxtBoxSalaire.Background = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
             TxtBoxCellulaire.Background = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
-            CmbContactUrgence.Background = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
+            TxtBoxContactUrgence.Background = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
+            TxtBoxLienContactUrgence.Background = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
+            TxtBoxPoste.Background = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
+            StkOptAugmentation.Background = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
+            TxtBoxAnciennete.Background = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
 
             DatePckNaissance.BorderBrush = new SolidColorBrush(Colors.Yellow) { Opacity = 1 };
 
@@ -305,6 +339,7 @@ namespace TP4
         private void CacherControleModification(object sender, RoutedEventArgs e)
         {
             modifEnCours = false;
+            StkSauvegarderQuitter.Visibility = Visibility.Visible;
 
             StkSaveCancel.Visibility = Visibility.Hidden;
             TxtBlockModification.Visibility = Visibility.Hidden;
@@ -312,10 +347,21 @@ namespace TP4
             DatePckNaissance.IsEnabled = false;
             TxtBoxSalaire.IsEnabled = false;
             TxtBoxCellulaire.IsEnabled = false;
+            TxtBoxLienContactUrgence.IsEnabled = false;
+            TxtBoxContactUrgence.IsEnabled = false;
+            TxtBoxPoste.IsEnabled = false;
+            TxtBoxAnciennete.IsEnabled = false;
+            OptAugmentationNon.IsEnabled = false;
+            OptAugmentationOui.IsEnabled = false;
 
             DatePckNaissance.Background = null;
             TxtBoxSalaire.Background = null;
             TxtBoxCellulaire.Background = null;
+            TxtBoxContactUrgence.Background = null;
+            TxtBoxLienContactUrgence.Background = null;
+            TxtBoxPoste.Background = null;
+            StkOptAugmentation.Background = null;
+            TxtBoxAnciennete.Background = null;
 
             DatePckNaissance.BorderBrush = null;
         }
@@ -375,14 +421,10 @@ namespace TP4
             TxtBlockID.Text = "Numéro d'employer : " + matrice[ID, 0];
             TxtBoxCellulaire.Text = FormatageText(matrice[ID, 10], "téléphone");
             TxtBoxSalaire.Text = FormatageText(matrice[ID, 4], "argent");
-            // Test with a hard-coded image path
-            string imagePath = @"C:\data\420-04A-FX\TP4\img\" + matrice[ID, 8];
-            BitmapImage image = new BitmapImage();
-            image.BeginInit();
-            image.CacheOption = BitmapCacheOption.OnLoad;
-            image.UriSource = new Uri(imagePath);
-            image.EndInit();
-            imgEmployer.Source = image;
+            
+            string imagePath = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.IndexOf("bin"));
+            imgEmployer.Source = new BitmapImage(new Uri(imagePath + "\\img\\" + matrice[ID, 8], UriKind.Absolute));
+            imgEmployer.Source.Freeze();
         }
 
         private void ImgEmployer_MouseEnter(object sender, MouseEventArgs e)
@@ -408,15 +450,19 @@ namespace TP4
                     matrice[i, 4] = TxtBoxSalaire.Text;
                     if (modifEnCours && !string.IsNullOrEmpty(cheminNouvelleImage))
                     {
-                        string directory = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.IndexOf("bin")) + "//img//";
+                        string directory = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.IndexOf("bin")) + "img\\";
                         string cheminMatrice = cheminNouvelleImage;
 
                         // Déchargez l'élément Image
                         imgEmployer.Source = null;
 
                         // Copiez l'image vers la destination
-                        File.Copy(cheminNouvelleImage, Path.Combine(directory, Path.GetFileName(cheminNouvelleImage)), true);
-                        matrice[i, 8] = Path.GetFileName(cheminNouvelleImage).ToString();
+                        if (!File.Exists(directory + Path.GetFileName(cheminMatrice)))
+                        {
+                            File.Copy(cheminNouvelleImage, Path.Combine(directory, Path.GetFileName(cheminNouvelleImage)), true);
+                            matrice[i, 8] = Path.GetFileName(cheminNouvelleImage).ToString();
+                        }
+
                     }
                     matrice[i, 9] = DatePckNaissance.Text;
                     matrice[i, 10] = TxtBoxCellulaire.Text;
@@ -436,7 +482,7 @@ namespace TP4
                 date[i] = Convert.ToInt32(split[i]);
             }
 
-            int age = System.DateTime.Now.Year - date[0];
+            int age = DateTime.Now.Year - date[0];
 
             return Convert.ToString(age);
         }
@@ -453,6 +499,19 @@ namespace TP4
                     return text.Replace("(", "").Replace(")", "").Replace(" ", "").Replace("-", "");
                 default:
                     return "null";
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Quittez sans sauvegarder.\n\nVous perdrez toutes les modifications apportées\n\nConfirmer...", "EquiGuest", MessageBoxButton.YesNo, MessageBoxImage.Exclamation, MessageBoxResult.No);
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    Environment.Exit(0);
+                    break;
+                case MessageBoxResult.No:
+                    break;
             }
         }
     }

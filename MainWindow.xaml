@@ -19,8 +19,8 @@
             <TextBlock x:Name="TxtBlockTitre" TextWrapping="Wrap" Margin="0,10,0,0" FontFamily="Bahnschrift Light SemiCondensed" FontSize="36" HorizontalAlignment="Center" Foreground="#FFFFAF00" TextAlignment="Center" Text="EquiGuest"/>
             <Rectangle x:Name="Ligne" Height="1" Stroke="White" Width="74" Margin="0,0,0,10"/>
 
-            <Border x:Name="BorderBtn" Background="#FF336F27" HorizontalAlignment="Center" CornerRadius="5">
-                <Button x:Name="BtnChargerFichier" Content="Charger CSV" HorizontalAlignment="Center" Click="BtnChargerFichier_Click" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Padding="4,4,4,4" FontSize="16" VerticalAlignment="Center" Foreground="White" BorderBrush="{x:Null}">
+            <Border x:Name="BorderBtn" Background="#FFFDFF00" HorizontalAlignment="Center" CornerRadius="5">
+                <Button x:Name="BtnChargerFichier" Content="Charger CSV" HorizontalAlignment="Center" Click="BtnChargerFichier_Click" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Padding="4,4,4,4" FontSize="16" VerticalAlignment="Center" Foreground="Black" BorderBrush="{x:Null}">
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -38,7 +38,7 @@
             <Label x:Name="lblSelectEmployer" Content="Employés" HorizontalAlignment="Left" Width="150" FontStyle="Italic" FontSize="14" Margin="0,5,0,0"/>
             <StackPanel x:Name="stkSelectionEmployer" HorizontalAlignment="Left" Orientation="Horizontal">
                 <ComboBox x:Name="cmbEmployer" FontSize="16" SelectionChanged="cmbEmployer_SelectionChanged" Height="27.28" Width="150"/>
-                <Button x:Name="BtnModifier" Content="Modifier" Width="150" Height="27.28" Margin="10,0,0,0" Click="BtnModifier_Click"/>
+                <Button x:Name="BtnModifier" Content="Modifier" Width="150" Height="27.28" Margin="10,0,0,0" Click="BtnModifier_Click" VerticalAlignment="Center"/>
                 <TextBlock x:Name="TxtBlockModification" TextWrapping="Wrap" Text="MODIFICATION EN COURS" Foreground="Red" FontSize="36" Margin="75,0,0,0" HorizontalAlignment="Center" FontStyle="Italic" TextDecorations="Underline" FontWeight="Bold" Visibility="Hidden"/>
             </StackPanel>
             <GroupBox x:Name="GrbInfoEmployer" Header="Information" Margin="0,10,0,0" Width="940" BorderBrush="Black">
@@ -53,14 +53,10 @@
                             <DatePicker x:Name="DatePckNaissance" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="1,1,1,1" Background="{x:Null}" BorderBrush="{x:Null}" IsEnabled="False"/>
                             <TextBlock x:Name="TxtBlockAge" TextWrapping="Wrap" Text="(xx ans)" IsEnabled="False" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <StackPanel x:Name="StkSalaire" Orientation="Horizontal">
-                            <Label x:Name="LblSalaire" Content="Salaire annuel :" HorizontalAlignment="Left" Padding="0,5,5,5"/>
-                            <TextBox x:Name="TxtBoxSalaire" TextWrapping="Wrap" Text="123 456 789,00$" Background="{x:Null}" VerticalAlignment="Center" IsEnabled="False" BorderBrush="{x:Null}" FontSize="14" Padding="1,1,1,1"/>
-                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
-            <GroupBox x:Name="GrbContactEmployer" Height="100" Header="Contact" BorderBrush="Black" Width="940" Margin="0,20,0,0">
+            <GroupBox x:Name="GrbContactEmployer" Header="Contact" BorderBrush="Black" Width="940" Margin="0,20,0,0">
                 <StackPanel x:Name="StkContactEmployer">
                     <StackPanel x:Name="StkCellulaire" Orientation="Horizontal">
                         <Label x:Name="LblCellulaire" Content="Numéro de téléphone : " FontSize="14"/>
@@ -73,15 +69,35 @@
                         </StackPanel>
                         <StackPanel x:Name="StkContactUrgenceInfo" Orientation="Horizontal">
                             <Label x:Name="LblLienAvecEmployer" Content="Lien avec l'employé : " FontSize="14" Foreground="Black"/>
-                            <ComboBox x:Name="CmbContactUrgence" FontSize="14" IsEnabled="False" VerticalAlignment="Center" SelectedIndex="0" Width="150" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="-1,0,0,0">
-                                <ComboBoxItem>Conjoint(e)</ComboBoxItem>
-                                <ComboBoxItem>Maman</ComboBoxItem>
-                                <ComboBoxItem>Papa</ComboBoxItem>
-                                <ComboBoxItem>Grand-papa</ComboBoxItem>
-                                <ComboBoxItem>Grand-maman</ComboBoxItem>
-                                <ComboBoxItem>Soeur</ComboBoxItem>
-                                <ComboBoxItem>Frere</ComboBoxItem>
-                            </ComboBox>
+                            <TextBox x:Name="TxtBoxLienContactUrgence" TextWrapping="Wrap" Text="Mère" IsEnabled="False" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14" VerticalAlignment="Center" Padding="1,1,1,1"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox x:Name="GrbInfoProfessionnelle" Header="Information professionnelle" Width="940" Margin="0,20,0,0" BorderBrush="Black">
+                <StackPanel x:Name="StkInfoProfessionnelle">
+                    <StackPanel x:Name="StkInfoProfessionnelleUn" Orientation="Horizontal">
+                        <StackPanel x:Name="StkAncienneter" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Label x:Name="LblAnciennete" Content="Année d'ancienneté : " FontSize="14" VerticalAlignment="Center"/>
+                            <TextBox x:Name="TxtBoxAnciennete" TextWrapping="Wrap" Text="xx" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Center" IsEnabled="False" FontSize="14"/>
+                            <TextBlock x:Name="TxtBlockAnciennete" TextWrapping="Wrap" Text="ans" VerticalAlignment="Center" FontSize="14" Margin="3,0,0,0"/>
+                        </StackPanel>
+                        <StackPanel x:Name="StkSalaire" Orientation="Horizontal" Margin="200,0,0,0">
+                            <Label x:Name="LblSalaire" Content="Salaire annuel :" Padding="5,5,5,5" FontSize="14" VerticalAlignment="Center"/>
+                            <TextBox x:Name="TxtBoxSalaire" TextWrapping="Wrap" Text="123 456 789,00$" Background="{x:Null}" IsEnabled="False" BorderBrush="{x:Null}" FontSize="14" Padding="1,1,1,1" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel x:Name="StkInfoProfessionnelleDeux" Margin="0,5,0,0" Orientation="Horizontal">
+                        <StackPanel x:Name="StkAugmentation" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Label x:Name="LblAugmentation" Content="Augmentation de salaire prévue : " VerticalAlignment="Center" FontSize="14"/>
+                            <StackPanel x:Name="StkOptAugmentation" Orientation="Horizontal" VerticalAlignment="Center">
+                                <RadioButton x:Name="OptAugmentationOui" Content="Oui" IsEnabled="False" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                                <RadioButton x:Name="OptAugmentationNon" Content="Non" IsEnabled="False" FontSize="14" VerticalAlignment="Center" Margin="5,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="4,-1,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel x:Name="StkPoste" Orientation="Horizontal" Margin="75,0,0,0">
+                            <Label x:Name="LblPoste" Content="Poste : " FontSize="14" VerticalAlignment="Center"/>
+                            <TextBox x:Name="TxtBoxPoste" TextWrapping="Wrap" Text="Développeur" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14" IsEnabled="False" Padding="1,1,1,1" VerticalAlignment="Center"/>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
@@ -89,6 +105,10 @@
             <StackPanel x:Name="StkSaveCancel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0" Visibility="Hidden">
                 <Button x:Name="btnSauvegarder" Content="Sauvegarder" Margin="0,0,5,0" Click="btnSauvegarder_Click" Padding="10,12,10,10"/>
                 <Button x:Name="btnAnnuler" Content="Annuler" Margin="5,0,0,0" IsCancel="True" Click="btnAnnuler_Click" Padding="10,13,10,10"/>
+            </StackPanel>
+            <StackPanel x:Name="StkSauvegarderQuitter" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button x:Name="BtnSauvegarderQuitter" Content="Sauvegarder et quitter" HorizontalContentAlignment="Center" Padding="5,5,5,5" Background="#FF65FF00" BorderBrush="{x:Null}" Foreground="Black" FontSize="16" HorizontalAlignment="Center"/>
+                <Button x:Name="BtnQuitter" Content="Quitter" Margin="0,10,0,0" BorderBrush="{x:Null}" Background="Red" FontSize="16" Padding="5,5,5,5" Click="Button_Click"/>
             </StackPanel>
         </StackPanel>
 
