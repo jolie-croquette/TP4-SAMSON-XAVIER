@@ -1,11 +1,13 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Data;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -25,6 +27,7 @@ namespace TP4
         bool boutonCliquer = false;
         bool modifEnCours = false;
         string cheminNouvelleImage = null;
+        int employerSelectionner = 0;
 
         /// <summary>
         ///  La matrice à utiliser pour récupérer les données extraites votre fichier .CSV
@@ -41,6 +44,7 @@ namespace TP4
         {
             // NE PAS RETIRER CE CODE
             InitializeComponent();
+            DatePckNaissance.Text = DateTime.Now.ToString();
 
             // Ici, c'est comme votre programme "Main" : vous pouvez coder essentiellement 
             // l'initialisation des vos variables, des champs par défaut de formulaire (si le cas),
@@ -70,9 +74,6 @@ namespace TP4
                 {
                     for (int j = 0; j < 1; j++)
                     {
-                        string nomFamille = matrice[i, 2];
-                        //string nomCouper = nomFamille.Substring(nomFamille.Length - 1);
-
                         cmbEmployer.Items.Add($"{i + 1}. {matrice[i, 1]}");
                     }
                 }
@@ -134,6 +135,7 @@ namespace TP4
                 // [i+1] On commence à la ligne 1, car la ligne 0 est l'entête
                 lignesFichier[i] = lignesFichierTemporaire[i + 1];
             }
+            fichierEntree.Close();
             #endregion
 
 
@@ -181,27 +183,54 @@ namespace TP4
         /// <param name="e"></param>
         private void cmbEmployer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            employerSelectionner = cmbEmployer.SelectedIndex;
             CacherControleModification(sender, e);
-            for (int i = 0; i < matrice.GetLength(0); i++)
+            AfficherInfo(sender,e);
+        }
+
+        private void AfficherInfo(object sender, RoutedEventArgs e)
+        {
+            if (cmbEmployer.SelectedValue != null)
             {
-                for (int j = 0; j < 1; j++)
+                string selectedValue = cmbEmployer.SelectedValue.ToString();
+                for (int i = 0; i < matrice.GetLength(0); i++)
                 {
-                    if (cmbEmployer.SelectedValue.ToString() == $"{i + 1}. {matrice[i, 1]}".ToString())
+                    for (int j = 0; j < 1; j++)
                     {
-                        string employerNom = cmbEmployer.SelectedValue.ToString();
-                        TxtBoxNomFamille.Text = cmbEmployer.SelectedValue.ToString().Substring(3);
-                        TxtBoxNom.Text = matrice[i, 2].ToString();
-                        TxtBlockID.Text = "Numéro d'employer : " + matrice[i, 0];
-                        TxtBoxDateNaissance.Text = "Date de naissance : " + matrice[i, 9];
-                        TxtBlockAge.Text = "(" + matrice[i, 3] + " ans)";
-                        // Test with a hard-coded image path
-                        string imagePath = @"C:\data\420-04A-FX\TP4\img\" + matrice[i, 8];
-                        imgEmployer.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+                        if (selectedValue == $"{i + 1}. {matrice[i, 1]}".ToString())
+                        {
+                            string employerNom = selectedValue;
+
+                            TxtBlockPrenom.Text = selectedValue.Substring(3);
+
+                            TxtBlockNom.Text = matrice[i, 2].ToString();
+
+                            TxtBlockID.Text = "Numéro d'employer : " + matrice[i, 0];
+
+                            TxtBlockAge.Text = "(" + matrice[i, 3] + " ans)";
+                            TxtBlockAge.Text = CalculAge(DatePckNaissance.Text, i);
+
+                            TxtBoxSalaire.Text = FormatageText(matrice[i, 4], "argent");
+
+                            DatePckNaissance.Text = matrice[i, 9];
+
+                            string imagePath = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.IndexOf("bin"));
+                            imgEmployer.Source = new BitmapImage(new Uri(imagePath + "\\img\\" + matrice[i, 8], UriKind.Absolute));
+                            imgEmployer.Source.Freeze();
+
+                            TxtBoxCellulaire.Text = FormatageText(matrice[i, 10], "téléphone");
+
+                            TxtBoxContactUrgence.Text = FormatageText(matrice[i, 11], "téléphone");
+
+                            CmbContactUrgence.Items.Add(matrice[i, 12]);
+                            CmbContactUrgence.SelectedIndex = i;
+
+                        }
                     }
                 }
             }
         }
-
+         
         /// <summary>
         /// 
         /// </summary>
@@ -216,7 +245,6 @@ namespace TP4
             else
             {
                 MessageBox.Show("Aucun employé sélectionné", "EquiGuest", MessageBoxButton.OK, MessageBoxImage.Error);
-
             }
         }
 
@@ -247,12 +275,26 @@ namespace TP4
         /// <param name="e"></param>
         private void AfficherControleModification(object sender, RoutedEventArgs e)
         {
-            StkSaveCancel.Visibility = Visibility.Visible;
-            TxtBoxNom.IsEnabled = true;
-            TxtBoxNomFamille.IsEnabled = true;
-            TxtBoxDateNaissance.IsEnabled = true;
-            TxtBlockModification.Visibility = Visibility.Visible;
             modifEnCours = true;
+
+            TxtBoxSalaire.Text = matrice[employerSelectionner, 4];
+            TxtBoxCellulaire.Text = FormatageText(TxtBoxCellulaire.Text, "modifTel");
+            TxtBoxContactUrgence.Text = FormatageText(TxtBoxContactUrgence.Text, "modifTel");
+
+            CmbContactUrgence.IsEnabled = true;
+            DatePckNaissance.IsEnabled = true;
+            TxtBoxSalaire.IsEnabled = true;
+            TxtBoxCellulaire.IsEnabled = true;
+
+            DatePckNaissance.Background = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
+            TxtBoxSalaire.Background = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
+            TxtBoxCellulaire.Background = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
+            CmbContactUrgence.Background = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
+
+            DatePckNaissance.BorderBrush = new SolidColorBrush(Colors.Yellow) { Opacity = 1 };
+
+            StkSaveCancel.Visibility = Visibility.Visible;
+            TxtBlockModification.Visibility = Visibility.Visible;
         }
 
         /// <summary>
@@ -262,12 +304,20 @@ namespace TP4
         /// <param name="e"></param>
         private void CacherControleModification(object sender, RoutedEventArgs e)
         {
-            StkSaveCancel.Visibility = Visibility.Hidden;
-            TxtBoxNom.IsEnabled = false;
-            TxtBoxNomFamille.IsEnabled = false;
-            TxtBoxDateNaissance.IsEnabled = false;
-            TxtBlockModification.Visibility = Visibility.Hidden;
             modifEnCours = false;
+
+            StkSaveCancel.Visibility = Visibility.Hidden;
+            TxtBlockModification.Visibility = Visibility.Hidden;
+
+            DatePckNaissance.IsEnabled = false;
+            TxtBoxSalaire.IsEnabled = false;
+            TxtBoxCellulaire.IsEnabled = false;
+
+            DatePckNaissance.Background = null;
+            TxtBoxSalaire.Background = null;
+            TxtBoxCellulaire.Background = null;
+
+            DatePckNaissance.BorderBrush = null;
         }
 
         /// <summary>
@@ -284,23 +334,13 @@ namespace TP4
                 ImageEmployer.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 ImageEmployer.ShowDialog();
 
-
                 if (ImageEmployer.ShowDialog() == true)
                 {
                     cheminNouvelleImage = ImageEmployer.FileName;
                     imgEmployer.Source = new BitmapImage(new Uri(cheminNouvelleImage, UriKind.Absolute));
+                    imgEmployer.Source.Freeze();
                 }
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Exit_Click(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Application.Current.Shutdown();
         }
 
         /// <summary>
@@ -328,14 +368,21 @@ namespace TP4
             int ID = cmbEmployer.SelectedIndex;
 
             string employerNom = cmbEmployer.SelectedValue.ToString();
-            TxtBoxNomFamille.Text = cmbEmployer.SelectedValue.ToString().Substring(3);
-            TxtBoxNom.Text = matrice[ID, 2].ToString();
-            TxtBoxDateNaissance.Text = matrice[ID, 9];
+            TxtBlockPrenom.Text = cmbEmployer.SelectedValue.ToString().Substring(3);
+            TxtBlockNom.Text = matrice[ID, 2].ToString();
+            DatePckNaissance.Text = matrice[ID, 9];
             TxtBlockAge.Text = "(" + matrice[ID, 3] + " ans)";
             TxtBlockID.Text = "Numéro d'employer : " + matrice[ID, 0];
+            TxtBoxCellulaire.Text = FormatageText(matrice[ID, 10], "téléphone");
+            TxtBoxSalaire.Text = FormatageText(matrice[ID, 4], "argent");
             // Test with a hard-coded image path
             string imagePath = @"C:\data\420-04A-FX\TP4\img\" + matrice[ID, 8];
-            imgEmployer.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.UriSource = new Uri(imagePath);
+            image.EndInit();
+            imgEmployer.Source = image;
         }
 
         private void ImgEmployer_MouseEnter(object sender, MouseEventArgs e)
@@ -355,15 +402,57 @@ namespace TP4
         {
             for (int i = 0; i < matrice.GetLength(0); i++)
             {
-                for (int j = 0; j < matrice.GetLength(1); j++)
+                if (cmbEmployer.SelectedIndex == Convert.ToInt32(matrice[i, 0]))
                 {
-                    if (cmbEmployer.SelectedIndex == Convert.ToInt32(matrice[i, 0]))
+                    matrice[i, 3] = CalculAge(DatePckNaissance.Text, i);
+                    matrice[i, 4] = TxtBoxSalaire.Text;
+                    if (modifEnCours && !string.IsNullOrEmpty(cheminNouvelleImage))
                     {
-                        string destinationFile = @"C:\data\420-04A-FX\TP4\img";
-                        File.Copy(cheminNouvelleImage, Path.Combine(destinationFile, $"employer{matrice[i, 0] + 1}.jpg"), true);
-                        matrice[i, 8] = Path.GetFileName(cheminNouvelleImage);
+                        string directory = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.IndexOf("bin")) + "//img//";
+                        string cheminMatrice = cheminNouvelleImage;
+
+                        // Déchargez l'élément Image
+                        imgEmployer.Source = null;
+
+                        // Copiez l'image vers la destination
+                        File.Copy(cheminNouvelleImage, Path.Combine(directory, Path.GetFileName(cheminNouvelleImage)), true);
+                        matrice[i, 8] = Path.GetFileName(cheminNouvelleImage).ToString();
                     }
+                    matrice[i, 9] = DatePckNaissance.Text;
+                    matrice[i, 10] = TxtBoxCellulaire.Text;
+                    Debug.WriteLine(DatePckNaissance.Text.Replace('-',' '));
                 }
+            }
+            cmbEmployer.SelectedIndex++;
+            cmbEmployer.SelectedIndex--;
+        }
+
+        public string CalculAge(string dateDeNaissance, int ID)
+        {
+            string[] split = dateDeNaissance.Split('-');
+            int[] date = new int[split.Length];
+            for (int i = 0; i < date.Length; i++)
+            {
+                date[i] = Convert.ToInt32(split[i]);
+            }
+
+            int age = System.DateTime.Now.Year - date[0];
+
+            return Convert.ToString(age);
+        }
+
+        public static string FormatageText(string text, string type)
+        {
+            switch (type)
+            {
+                case "téléphone":
+                    return String.Format("{0:(###) ###-####}", Convert.ToInt64(text));
+                case "argent":
+                    return String.Format("{0:C}", Convert.ToInt32(text));
+                case "modifTel":
+                    return text.Replace("(", "").Replace(")", "").Replace(" ", "").Replace("-", "");
+                default:
+                    return "null";
             }
         }
     }
