@@ -649,21 +649,33 @@ namespace TP4
 
                     //Affecter le nouveau salaire
                     matrice[i, 4] = TxtBoxSalaire.Text;
+
+                    //Affecter le nouveau poste
                     matrice[i, 5] = TxtBoxPoste.Text;
+
+                    //Affecter la nouvelle année d'ancienneté
                     matrice[i, 6] = TxtBoxAnciennete.Text;
 
+                    //Si l'augmentaion de salaire est sélectionné oui
                     if (OptAugmentationOui.IsChecked == true)
                     {
+                        //Affecter la matrice à oui
                         matrice[i, 7] = "oui";
                     }
+                    //Sinon si la l'augmentation de salaire est sélectionné non
                     else if (OptAugmentationNon.IsChecked == true)
                     {
+                        //Affecter la matrice à non
                         matrice[i, 7] = "non";
                     }
 
+                    //Si les modification son active et que le chemin de la nouvelle image n'est pas null
                     if (modifEnCours && !string.IsNullOrEmpty(cheminNouvelleImage))
                     {
+                        //Variable pour stocker le lieu de stockage de la nouvelle image
                         string directory = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.IndexOf("bin")) + "img\\";
+                        
+                        //Chemin de la nouvelle image à enregistré dans la matrice
                         string cheminMatrice = cheminNouvelleImage;
 
                         // Déchargez l'élément Image
@@ -673,17 +685,29 @@ namespace TP4
                         if (!File.Exists(directory + Path.GetFileName(cheminMatrice)))
                         {
                             File.Copy(cheminNouvelleImage, Path.Combine(directory, Path.GetFileName(cheminNouvelleImage)), true);
+                            
+                            //Affecter le nom de l'image dans la matrice
                             matrice[i, 8] = Path.GetFileName(cheminNouvelleImage).ToString();
                         }
 
                     }
+
+                    //Affecter la nouvelle date de naissance
                     matrice[i, 9] = DatePckNaissance.Text;
+                    
+                    //Affecter le nouveau numéro de téléphone dans la matrice
                     matrice[i, 10] = TxtBoxCellulaire.Text;
+
+                    //Affecter le nouveau numéro de téléphone du contact d'urgence
                     matrice[i, 11] = TxtBoxContactUrgence.Text;
+
+                    //Affecter le nouveau du contact d'urgence
                     matrice[i, 12] = CmbLienAvecEmployer.Text;
 
                 }
             }
+
+            //Rafraichir l'affichage des informations en changant l'index
             cmbEmployer.SelectedIndex++;
             cmbEmployer.SelectedIndex--;
         }
